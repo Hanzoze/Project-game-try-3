@@ -14,13 +14,13 @@ public class Bomb extends Structure {
     // Method to handle collision
     public void handleCollision(List<Creature> creatures, List<Structure> structures, Ground[][] groundArray, int tileSize, GamePanel gamePanel) {
         for (Creature creature : creatures) {
-            if (isColliding(creature.getX(), creature.getY(), tileSize)) {
+            if (this.isCollidingWith(creature)) {
                 explode(groundArray, tileSize, creatures, structures, gamePanel);
                 break;
             }
         }
         for (Structure structure : structures) {
-            if (this != structure && isColliding(structure.getX(), structure.getY(), tileSize)) {
+            if (this != structure && this.isCollidingWith(structure)) {
                 explode(groundArray, tileSize, creatures, structures, gamePanel);
                 break;
             }
@@ -62,9 +62,6 @@ public class Bomb extends Structure {
     }
 
     // Collision check
-    private boolean isColliding(int entityX, int entityY, int tileSize) {
-        return this.getX() == entityX && this.getY() == entityY;
-    }
 
     private boolean isWithinExplosionRadius(int entityX, int entityY, int tileSize) {
         int col = x / tileSize;

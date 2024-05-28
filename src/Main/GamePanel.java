@@ -4,8 +4,6 @@ import Entity.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,51 +21,30 @@ public class GamePanel extends JPanel implements Runnable {
     int destroyedCounter = 0; // Counter for destroyed tiles
     int repairedCounter = 0;
     int count = 0;
-    JButton startStopButton;
-    JButton restartButton;
 
-    int FPS = 60;
+    int FPS = 30;
     Thread gameThread;
     Ground[][] groundArray;
     List<Creature> creatures; // List to store all creatures
     List<Structure> structures; // List to store all structures
+    ControlPanel controlPanel;
 
     // Constructor for GamePanel
-    public GamePanel() {
+    public GamePanel(ControlPanel controlPanel) {
+        this.controlPanel = controlPanel;
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.black);
         this.setDoubleBuffered(true); // for better rendering performance
         this.setFocusable(true);
 
-        startStopButton = new JButton("Start/Stop");
-        startStopButton.addActionListener(e -> {
-            if (gameThread != null && gameThread.isAlive()) {
-                stopGameThread();
-                startStopButton.setText("Start/Stop");
-            } else {
-                // Initialize and start the game thread
-                gameThread = new Thread(this);
-                gameThread.start();
-                startStopButton.setText("Start/Stop");
-            }
-        });
-        this.add(startStopButton);
-
-        restartButton = new JButton("Restart");
-        restartButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                restartSimulation();
-            }
-        });
-        this.add(restartButton);
-
         groundArray = Ground.creatnewground(maxScreenCol, maxScreenRow, tileSize, Color.GRAY);
         creatures = new ArrayList<>();
         structures = new ArrayList<>();
-
         // Create multiple warriors
         for (int i = 0; i < 1; i++) {
             creatures.add(Warrior.createRandomWarrior(maxScreenCol, maxScreenRow, tileSize, Color.RED));
+        }
+        for (int i = 0; i < 1; i++) {
             creatures.add(Warrior.createRandomWarrior(maxScreenCol, maxScreenRow, tileSize, Color.BLUE));
         }
 
@@ -82,17 +59,29 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    public void setControlPanel(ControlPanel controlPanel) {
+        this.controlPanel = controlPanel;
+    }
+
     public void startGameThread() {
-        gameThread = new Thread(this);
-        gameThread.start();
+        if (gameThread == null || !gameThread.isAlive()) {
+            gameThread = new Thread(this);
+            gameThread.start();
+        }
     }
 
     public void stopGameThread() {
-        gameThread.interrupt();
-        gameThread = null;
+        if (gameThread != null) {
+            gameThread.interrupt();
+            gameThread = null;
+        }
     }
 
-    private void restartSimulation() {
+    public boolean isRunning() {
+        return gameThread != null && gameThread.isAlive();
+    }
+
+    public void restartSimulation() {
         // Reset counters
         destroyedCounter = 0;
         repairedCounter = 0;
@@ -117,39 +106,35 @@ public class GamePanel extends JPanel implements Runnable {
         }
 
         // Restore all ground tiles
-        for(int i = 0; i < maxScreenCol; i++) {
-            for(int j = 0; j < maxScreenRow; j++) {
+        for (int i = 0; i < maxScreenCol; i++) {
+            for (int j = 0; j < maxScreenRow; j++) {
                 groundArray[i][j].setAlive();
             }
         }
+
+        updateControlPanel();
     }
+
     public void incrementRepairedCounter() {
         repairedCounter++;
+        updateControlPanel();
     }
-
-    public int getIncrementRepairedCounter() {
-        return repairedCounter;
-    }
-
     public void incrementDestroyedCounter() {
         destroyedCounter++;
+        updateControlPanel();
     }
-
-    public int getIncrementDestroyedCounter() {
-        return destroyedCounter;
-    }
-
     public void incrementCounter() {
         count++;
+        updateControlPanel();
     }
 
-    public int getIncrementCounter() {
-        return count;
+    private void updateControlPanel() {
+        controlPanel.updateCounters(destroyedCounter, repairedCounter, count);
     }
 
     @Override
     public void run() {
-        double drawInterval = (double) 1000000000 / FPS; // 0.0166666 seconds
+        double drawInterval = (double) 1000000000 / FPS; // 0.033333 seconds
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
@@ -179,7 +164,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         for (Structure structure : structures) {
             if (structure.isAlive()) {
-                if(structure instanceof Bomb){
+                if (structure instanceof Bomb) {
                     ((Bomb) structure).handleCollision(creatures, structures, groundArray, tileSize, this);
                 }
             }
@@ -207,10 +192,5 @@ public class GamePanel extends JPanel implements Runnable {
         for (Structure structure : structures) {
             structure.draw(g);
         }
-
-        g.setColor(Color.WHITE);
-        g.drawString("Destroyed: " + destroyedCounter, 10, 20);
-        g.drawString("Repaired: " + repairedCounter, 10, 40);
-        g.drawString("Count: " + count, 10, 60);
     }
 }

@@ -19,20 +19,17 @@ public class Warrior extends Creature {
 
     public void handleEncounter(List<Creature> creatures, Ground[][] groundArray, int tileSize, GamePanel gamePanel) {
         for (Creature creature : creatures) {
-            if (this != creature && getX() == creature.getX() && getY() == creature.getY() && creature.isAlive()) {
-                if (creature instanceof Warrior) {
-                    // Encounter with another Warrior
-                    int col = getX() / tileSize;
-                    int row = getY() / tileSize;
-                    if (groundArray[col][row].isAlive()) {
-                        gamePanel.incrementDestroyedCounter();
-                        groundArray[col][row].setDead();
-                    }
-                    for (Creature nonWarrior: creatures){
-                        if(!(nonWarrior instanceof Warrior) && nonWarrior.isAlive && nonWarrior.getX()==creature.getX() && nonWarrior.getY()==creature.getY()){
-                            nonWarrior.setDead();
-                            gamePanel.incrementCounter();
-                        }
+            if (this.isCollidingWith(creature) && creature.isAlive() && creature instanceof Warrior && !this.color.equals(creature.color)) {
+                int col = getX() / tileSize;
+                int row = getY() / tileSize;
+                if (groundArray[col][row].isAlive()) {
+                    gamePanel.incrementDestroyedCounter();
+                    groundArray[col][row].setDead();
+                }
+                for (Creature nonWarrior: creatures){
+                    if(!(nonWarrior instanceof Warrior) && nonWarrior.isAlive && nonWarrior.getX()==creature.getX() && nonWarrior.getY()==creature.getY()){
+                        nonWarrior.setDead();
+                        gamePanel.incrementCounter();
                     }
                 }
             }

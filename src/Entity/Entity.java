@@ -46,4 +46,7 @@ public abstract class Entity {
     public void setAlive(){
         isAlive = true;
     }
+    public boolean isCollidingWith(Entity other) {
+        return this != other && this.getX() == other.getX() && this.getY() == other.getY();
+    }
 }
