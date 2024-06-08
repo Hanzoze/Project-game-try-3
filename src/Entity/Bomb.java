@@ -11,6 +11,7 @@ public class Bomb extends Structure {
         super(x, y, size, color);
     }
 
+
     // Method to handle collision
     public void handleCollision(List<Creature> creatures, List<Structure> structures, Ground[][] groundArray, int tileSize, GamePanel gamePanel) {
         for (Creature creature : creatures) {

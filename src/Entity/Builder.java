@@ -9,6 +9,8 @@ public class Builder extends Creature {
         super(x, y, size, color);
     }
 
+
+
     public static Builder createRandomBuilder(int maxScreenCol, int maxScreenRow, int tileSize, Color color) {
         Random random = new Random();
         int randomX = random.nextInt(maxScreenCol) * tileSize;

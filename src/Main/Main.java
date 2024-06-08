@@ -7,10 +7,10 @@ public class Main {
         JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //for closing in right way
         window.setResizable(false);
-        window.setTitle("Kolorowe kwadraciki"); //name
+        window.setTitle("Super-mega-nieciekawa-gra"); //name
 
         // Создайте GamePanel без ControlPanel
-        GamePanel gamePanel = new GamePanel(null);
+        GamePanel gamePanel = new GamePanel(null, new SimulationSettings(0, 0, 30, 50));
 
         // Затем создайте ControlPanel с ссылкой на GamePanel
         ControlPanel controlPanel = new ControlPanel(gamePanel);

@@ -10,6 +10,7 @@ public class Warrior extends Creature {
         super(x, y, size, color);
     }
 
+
     public static Warrior createRandomWarrior(int maxScreenCol, int maxScreenRow, int tileSize, Color color) {
         Random random = new Random();
         int randomX = random.nextInt(maxScreenCol) * tileSize;
