@@ -24,7 +24,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     private final SimulationSettings settings;
 
-    int FPS = 30;
+    final int FPS = 30;
     Thread gameThread;
     Ground[][] groundArray;
     List<Creature> creatures; // List to store all creatures
@@ -44,17 +44,30 @@ public class GamePanel extends JPanel implements Runnable {
         creatures = new ArrayList<>();
         structures = new ArrayList<>();
 
-        for (int i = 0; i < settings.getNumberOfWarriorsRed(); i++) {
-            creatures.add(Warrior.createRandomWarrior(maxScreenCol, maxScreenRow, tileSize, Color.RED));
+        createWarriors(settings.getNumberOfWarriorsRed(), Color.RED);
+        createWarriors(settings.getNumberOfWarriorsBlue(), Color.BLUE);
+        createBuilders(settings.getNumberOfBuilders(), Color.YELLOW);
+        createBombs(settings.getNumberOfBombs(), Color.ORANGE);
+    }
+
+    private void createWarriors(int numberOfWarriors, Color color) {
+        for (int i = 0; i < numberOfWarriors; i++) {
+            Warrior warrior = Warrior.createRandomWarrior(maxScreenCol, maxScreenRow, tileSize, color);
+            creatures.add(warrior);
         }
-        for (int i = 0; i < settings.getNumberOfWarriorsBlue(); i++) {
-            creatures.add(Warrior.createRandomWarrior(maxScreenCol, maxScreenRow, tileSize, Color.BLUE));
+    }
+
+    private void createBuilders(int numberOfBuilders, Color color) {
+        for (int i = 0; i < numberOfBuilders; i++) {
+            Builder builder = Builder.createRandomBuilder(maxScreenCol, maxScreenRow, tileSize, color);
+            creatures.add(builder);
         }
-        for (int i = 0; i < settings.getNumberOfBuilders(); i++) {
-            creatures.add(Builder.createRandomBuilder(maxScreenCol, maxScreenRow, tileSize, Color.YELLOW));
-        }
-        for (int i = 0; i < settings.getNumberOfBombs(); i++) {
-            structures.add(Bomb.createRandomBomb(maxScreenCol, maxScreenRow, tileSize, Color.ORANGE));
+    }
+
+    private void createBombs(int numberOfBombs, Color color) {
+        for (int i = 0; i < numberOfBombs; i++) {
+            Bomb bomb = Bomb.createRandomBomb(maxScreenCol, maxScreenRow, tileSize, color);
+            structures.add(bomb);
         }
     }
 
@@ -85,6 +98,7 @@ public class GamePanel extends JPanel implements Runnable {
         destroyedCounter = 0;
         repairedCounter = 0;
         count = 0;
+
         // Clear lists of creatures and structures
         creatures.clear();
         structures.clear();

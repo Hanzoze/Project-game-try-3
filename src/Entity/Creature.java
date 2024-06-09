@@ -9,8 +9,8 @@ public class Creature extends Entity {
     }
     private static Point calculateNewPosition(int currentX, int currentY, int tileSize) {
         Random random = new Random();
-        int dx = random.nextInt(3) - 1; // -1, 0 или 1
-        int dy = random.nextInt(3) - 1; // -1, 0 или 1
+        int dx = random.nextInt(3) - 1; // -1, 0 or 1
+        int dy = random.nextInt(3) - 1; // -1, 0 or 1
         int newX = currentX + dx * tileSize;
         int newY = currentY + dy * tileSize;
         return new Point(newX, newY);

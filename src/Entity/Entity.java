@@ -21,26 +21,15 @@ public abstract class Entity {
         this.isAlive=true;
         getImage();
     }
-    public void draw(Graphics2D g) {
-        if (isAlive) {
-            if (this instanceof Warrior) {
-                g.drawImage(color.equals(Color.RED) ? warrior_red_image : warrior_blue_image, x, y, size, size, null);
-            } else if (this instanceof Builder) {
-                g.drawImage(builder_image, x, y, size, size, null);
-            } else if (this instanceof Bomb) {
-                g.drawImage(bomb_image, x, y, size, size, null);
-            } else {
-                g.setColor(color);
-                g.fillRect(x, y, size, size); // Fallback to color if no image is found
-            }
-        }
-    }
+
     public void setDead() {
         isAlive = false;
     }
+
     public boolean isAlive() {
         return isAlive;
     }
+
     public int getX() {
         return x;
     }
@@ -57,9 +46,11 @@ public abstract class Entity {
     public void setY(int y) {
         this.y = y;
     }
+
     public void setAlive(){
         isAlive = true;
     }
+
     public boolean isCollidingWith(Entity other) {
         return this != other && this.getX() == other.getX() && this.getY() == other.getY();
     }
@@ -72,6 +63,20 @@ public abstract class Entity {
             bomb_image = ImageIO.read(getClass().getResourceAsStream("/Main/images/bomb.png"));
         }catch (IOException e){
             e.printStackTrace();
+        }
+    }
+    public void draw(Graphics2D g) {
+        if (isAlive) {
+            if (this instanceof Warrior) {
+                g.drawImage(color.equals(Color.RED) ? warrior_red_image : warrior_blue_image, x, y, size, size, null);
+            } else if (this instanceof Builder) {
+                g.drawImage(builder_image, x, y, size, size, null);
+            } else if (this instanceof Bomb) {
+                g.drawImage(bomb_image, x, y, size, size, null);
+            } else {
+                g.setColor(color);
+                g.fillRect(x, y, size, size); // Fallback to color if no image is found
+            }
         }
     }
 }
