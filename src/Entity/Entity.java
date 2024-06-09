@@ -11,8 +11,7 @@ public abstract class Entity {
     public boolean isAlive; // жив или мертв
     public Color color;
     public BufferedImage builder_image, warrior_red_image, warrior_blue_image, bomb_image;
-    private int initialX, initialY;
-    private boolean initialIsAlive;
+
 
     public Entity(int x, int y, int size, Color color){
         this.x=x;
@@ -50,7 +49,7 @@ public abstract class Entity {
         return y;
     }
 
-    // Установить новые координаты воина
+    // Set new coordinates
     public void setX(int x) {
         this.x = x;
     }
@@ -64,17 +63,7 @@ public abstract class Entity {
     public boolean isCollidingWith(Entity other) {
         return this != other && this.getX() == other.getX() && this.getY() == other.getY();
     }
-    public void saveInitialState() {
-        initialX = x;
-        initialY = y;
-        initialIsAlive = isAlive;
-    }
 
-    public void restoreInitialState() {
-        x = initialX;
-        y = initialY;
-        isAlive = initialIsAlive;
-    }
     public void getImage(){
         try{
             builder_image = ImageIO.read(getClass().getResourceAsStream("/Main/images/builder.png"));

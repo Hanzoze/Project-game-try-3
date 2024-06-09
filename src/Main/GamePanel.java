@@ -22,8 +22,6 @@ public class GamePanel extends JPanel implements Runnable {
     int repairedCounter = 0;
     int count = 0;
 
-    private boolean gameOver = false;
-    private String winningTeam = "";
     private final SimulationSettings settings;
 
     int FPS = 30;
@@ -46,33 +44,17 @@ public class GamePanel extends JPanel implements Runnable {
         creatures = new ArrayList<>();
         structures = new ArrayList<>();
 
-        createWarriors(settings.getNumberOfWarriorsRed(), Color.RED);
-        createWarriors(settings.getNumberOfWarriorsBlue(), Color.BLUE);
-        createBuilders(settings.getNumberOfBuilders(), Color.YELLOW);
-        createBombs(settings.getNumberOfBombs(), Color.ORANGE);
-    }
-
-    private void createWarriors(int numberOfWarriors, Color color) {
-        for (int i = 0; i < numberOfWarriors; i++) {
-            Warrior warrior = Warrior.createRandomWarrior(maxScreenCol, maxScreenRow, tileSize, color);
-            warrior.saveInitialState();
-            creatures.add(warrior);
+        for (int i = 0; i < settings.getNumberOfWarriorsRed(); i++) {
+            creatures.add(Warrior.createRandomWarrior(maxScreenCol, maxScreenRow, tileSize, Color.RED));
         }
-    }
-
-    private void createBuilders(int numberOfBuilders, Color color) {
-        for (int i = 0; i < numberOfBuilders; i++) {
-            Builder builder = Builder.createRandomBuilder(maxScreenCol, maxScreenRow, tileSize, color);
-            builder.saveInitialState();
-            creatures.add(builder);
+        for (int i = 0; i < settings.getNumberOfWarriorsBlue(); i++) {
+            creatures.add(Warrior.createRandomWarrior(maxScreenCol, maxScreenRow, tileSize, Color.BLUE));
         }
-    }
-
-    private void createBombs(int numberOfBombs, Color color) {
-        for (int i = 0; i < numberOfBombs; i++) {
-            Bomb bomb = Bomb.createRandomBomb(maxScreenCol, maxScreenRow, tileSize, color);
-            bomb.saveInitialState();
-            structures.add(bomb);
+        for (int i = 0; i < settings.getNumberOfBuilders(); i++) {
+            creatures.add(Builder.createRandomBuilder(maxScreenCol, maxScreenRow, tileSize, Color.YELLOW));
+        }
+        for (int i = 0; i < settings.getNumberOfBombs(); i++) {
+            structures.add(Bomb.createRandomBomb(maxScreenCol, maxScreenRow, tileSize, Color.ORANGE));
         }
     }
 
@@ -103,9 +85,6 @@ public class GamePanel extends JPanel implements Runnable {
         destroyedCounter = 0;
         repairedCounter = 0;
         count = 0;
-        gameOver = false;
-        winningTeam = "";
-
         // Clear lists of creatures and structures
         creatures.clear();
         structures.clear();
@@ -173,10 +152,6 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        if (gameOver) {
-            return; // If game is over, do not update
-        }
-
         for (Creature creature : creatures) {
             if (creature.isAlive()) {
                 Creature.move(creature, tileSize, screenWidth, screenHeight);
@@ -222,16 +197,6 @@ public class GamePanel extends JPanel implements Runnable {
         // Drawing structures
         for (Structure structure : structures) {
             structure.draw(g2d);
-        }
-        if (gameOver) {
-            g2d.setFont(new Font("Arial", Font.BOLD, 48));
-            g2d.setColor(Color.WHITE);
-            FontMetrics fm = g2d.getFontMetrics();
-            int messageWidth = fm.stringWidth(winningTeam);
-            int messageHeight = fm.getHeight();
-            int x = (screenWidth - messageWidth) / 2;
-            int y = (screenHeight - messageHeight) / 2;
-            g2d.drawString(winningTeam, x, y);
         }
     }
 }
