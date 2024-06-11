@@ -4,6 +4,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.Objects;
 
 public abstract class Entity {
     public int x, y; // координаты
@@ -57,10 +58,10 @@ public abstract class Entity {
 
     public void getImage(){
         try{
-            builder_image = ImageIO.read(getClass().getResourceAsStream("/Main/images/builder.png"));
-            warrior_red_image = ImageIO.read(getClass().getResourceAsStream("/Main/images/warrior_red.png"));
-            warrior_blue_image = ImageIO.read(getClass().getResourceAsStream("/Main/images/warrior_blue.png"));
-            bomb_image = ImageIO.read(getClass().getResourceAsStream("/Main/images/bomb.png"));
+            builder_image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Main/images/builder.png")));
+            warrior_red_image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Main/images/warrior_red.png")));
+            warrior_blue_image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Main/images/warrior_blue.png")));
+            bomb_image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Main/images/bomb.png")));
         }catch (IOException e){
             e.printStackTrace();
         }

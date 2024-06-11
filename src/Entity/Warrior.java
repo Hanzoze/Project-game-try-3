@@ -10,7 +10,6 @@ public class Warrior extends Creature {
         super(x, y, size, color);
     }
 
-
     public static Warrior createRandomWarrior(int maxScreenCol, int maxScreenRow, int tileSize, Color color) {
         Random random = new Random();
         int randomX = random.nextInt(maxScreenCol) * tileSize;
@@ -28,7 +27,7 @@ public class Warrior extends Creature {
                     groundArray[col][row].setDead();
                 }
                 for (Creature nonWarrior: creatures){
-                    if(!(nonWarrior instanceof Warrior) && nonWarrior.isAlive && nonWarrior.getX()==creature.getX() && nonWarrior.getY()==creature.getY()){
+                    if(!(nonWarrior instanceof Warrior) && nonWarrior.isAlive && nonWarrior.isCollidingWith(creature)){
                         nonWarrior.setDead();
                         gamePanel.incrementCounter();
                     }

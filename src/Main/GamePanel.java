@@ -32,8 +32,7 @@ public class GamePanel extends JPanel implements Runnable {
     ControlPanel controlPanel;
 
     // Constructor for GamePanel
-    public GamePanel(ControlPanel controlPanel, SimulationSettings settings) {
-        this.controlPanel = controlPanel;
+    public GamePanel(SimulationSettings settings) {
         this.settings = settings;
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.black);
@@ -76,7 +75,7 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void startGameThread() {
-        if (gameThread == null || !gameThread.isAlive()) {
+        if (gameThread == null) {
             gameThread = new Thread(this);
             gameThread.start();
         }
@@ -104,28 +103,15 @@ public class GamePanel extends JPanel implements Runnable {
         structures.clear();
 
         // Recreate creatures
-        for (int i = 0; i < settings.getNumberOfWarriorsRed(); i++) {
-            creatures.add(Warrior.createRandomWarrior(maxScreenCol, maxScreenRow, tileSize, Color.RED));
-        }
-        for (int i = 0; i < settings.getNumberOfWarriorsBlue(); i++) {
-            creatures.add(Warrior.createRandomWarrior(maxScreenCol, maxScreenRow, tileSize, Color.BLUE));
-        }
-        for (int i = 0; i < settings.getNumberOfBuilders(); i++) {
-            creatures.add(Builder.createRandomBuilder(maxScreenCol, maxScreenRow, tileSize, Color.YELLOW));
-        }
-
-        // Recreate structures
-        for (int i = 0; i < settings.getNumberOfBombs(); i++) {
-            structures.add(Bomb.createRandomBomb(maxScreenCol, maxScreenRow, tileSize, Color.ORANGE));
-        }
+        createWarriors(settings.getNumberOfWarriorsRed(), Color.RED);
+        createWarriors(settings.getNumberOfWarriorsBlue(), Color.BLUE);
+        createBuilders(settings.getNumberOfBuilders(), Color.YELLOW);
+        createBombs(settings.getNumberOfBombs(), Color.ORANGE);
 
         // Restore all ground tiles
-        for (int i = 0; i < maxScreenCol; i++) {
-            for (int j = 0; j < maxScreenRow; j++) {
-                groundArray[i][j].setAlive();
-            }
-        }
+        groundArray = Ground.creatnewground(maxScreenCol, maxScreenRow, tileSize, Color.GRAY);
 
+        //Udpate ControlPanel
         updateControlPanel();
     }
 
@@ -155,12 +141,12 @@ public class GamePanel extends JPanel implements Runnable {
         long currentTime;
         while (gameThread != null) {
             currentTime = System.nanoTime();
-            delta += (currentTime - lastTime) / drawInterval;
-            lastTime = currentTime;
+            delta += (currentTime - lastTime) / drawInterval; //We look for how much time has passed from current time by subtracting from it last time that we know. Then by dividing it on drawInterval we check if it has achived time needed for update
+            lastTime = currentTime; //Then we change our last time for current time so the loop will work properly
             if (delta >= 1) {
                 update();
                 repaint();
-                delta--;
+                delta--; //and in the end we are subtracting 1 from delta so it will be the same from the start
             }
         }
     }
@@ -180,7 +166,7 @@ public class GamePanel extends JPanel implements Runnable {
         for (Structure structure : structures) {
             if (structure.isAlive()) {
                 if (structure instanceof Bomb) {
-                    ((Bomb) structure).handleCollision(creatures, structures, groundArray, tileSize, this);
+                    ((Bomb) structure).handleEncounter(creatures, structures, groundArray, tileSize, this);
                 }
             }
         }
@@ -194,11 +180,9 @@ public class GamePanel extends JPanel implements Runnable {
         // Drawing the ground
         for (int x = 0; x < maxScreenCol; x++) {
             for (int y = 0; y < maxScreenRow; y++) {
-                groundArray[x][y].draw(g2d);
-                groundArray[x][y].drawBorder(g2d);
-                if (!groundArray[x][y].isAlive()) {
-                    g2d.setColor(Color.BLACK);
-                    g2d.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
+                if(groundArray[x][y].isAlive){
+                    groundArray[x][y].draw(g2d);
+                    groundArray[x][y].drawBorder(g2d);
                 }
             }
         }

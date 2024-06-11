@@ -16,10 +16,10 @@ public class SimulationSettings {
     public int getNumberOfWarriorsRed() {
         return numberOfWarriorRed;
     }
+
     public int getNumberOfWarriorsBlue() {
         return numberOfWarriorBlue;
     }
-
 
     public int getNumberOfBuilders() {
         return numberOfBuilders;

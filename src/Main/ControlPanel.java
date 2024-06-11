@@ -6,40 +6,28 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class ControlPanel extends JFrame {
-    private JButton startStopButton;
-    private JButton restartButton;
-    private JLabel destroyedCounterLabel;
-    private JLabel repairedCounterLabel;
-    private JLabel countLabel;
-    private GamePanel gamePanel;
+    private final JLabel destroyedCounterLabel;
+    private final JLabel repairedCounterLabel;
+    private final JLabel countLabel;
 
     public ControlPanel(GamePanel gamePanel) {
-        this.gamePanel = gamePanel;
 
         setTitle("Control Panel");
         setSize(300, 200);
         setLayout(new GridLayout(5, 1));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        startStopButton = new JButton("Start/Stop");
-        startStopButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (gamePanel.isRunning()) {
-                    gamePanel.stopGameThread();
-                } else {
-                    gamePanel.startGameThread();
-                }
+        JButton startStopButton = new JButton("Start/Stop");
+        startStopButton.addActionListener(e -> {
+            if (gamePanel.isRunning()) {
+                gamePanel.stopGameThread();
+            } else {
+                gamePanel.startGameThread();
             }
         });
 
-        restartButton = new JButton("Restart");
-        restartButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                gamePanel.restartSimulation();
-            }
-        });
+        JButton restartButton = new JButton("Restart");
+        restartButton.addActionListener(e -> gamePanel.restartSimulation());
 
         destroyedCounterLabel = new JLabel("Destroyed: 0");
         repairedCounterLabel = new JLabel("Repaired: 0");

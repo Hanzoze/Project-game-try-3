@@ -10,7 +10,7 @@ public class Main {
         window.setTitle("Super-mega-nieciekawa-gra"); //name
 
         // Создайте GamePanel без ControlPanel
-        GamePanel gamePanel = new GamePanel(null, new SimulationSettings(1, 1, 1, 1));
+        GamePanel gamePanel = new GamePanel(new SimulationSettings(0, 0, 10, 10));
 
         // Затем создайте ControlPanel с ссылкой на GamePanel
         ControlPanel controlPanel = new ControlPanel(gamePanel);
