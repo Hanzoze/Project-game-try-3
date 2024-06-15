@@ -7,6 +7,9 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * GamePanel class to manage game entities, handle game logic, and render the game screen.
+ */
 public class GamePanel extends JPanel implements Runnable {
     // Screen settings
     final int originalTileSize = 16; // 16x16 pixels
@@ -31,7 +34,11 @@ public class GamePanel extends JPanel implements Runnable {
     List<Structure> structures; //List to store all structures
     ControlPanel controlPanel;
 
-    // Constructor for GamePanel
+    /**
+     * Constructor for GamePanel.
+     *
+     * @param settings the simulation settings
+     */
     public GamePanel(SimulationSettings settings) {
         this.settings = settings;
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -50,6 +57,12 @@ public class GamePanel extends JPanel implements Runnable {
         createBombs(settings.getNumberOfBombs(), Color.ORANGE);
     }
 
+    /**
+     * Creates a specified number of warriors with a given color.
+     *
+     * @param numberOfWarriors the number of warriors to create
+     * @param color the color of the warriors
+     */
     private void createWarriors(int numberOfWarriors, Color color) {
         for (int i = 0; i < numberOfWarriors; i++) {
             Warrior warrior = Warrior.createRandomWarrior(maxScreenCol, maxScreenRow, tileSize, color);
@@ -57,6 +70,12 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    /**
+     * Creates a specified number of builders with a given color.
+     *
+     * @param numberOfBuilders the number of builders to create
+     * @param color the color of the builders
+     */
     private void createBuilders(int numberOfBuilders, Color color) {
         for (int i = 0; i < numberOfBuilders; i++) {
             Builder builder = Builder.createRandomBuilder(maxScreenCol, maxScreenRow, tileSize, color);
@@ -64,6 +83,12 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    /**
+     * Creates a specified number of bombs with a given color.
+     *
+     * @param numberOfBombs the number of bombs to create
+     * @param color the color of the bombs
+     */
     private void createBombs(int numberOfBombs, Color color) {
         for (int i = 0; i < numberOfBombs; i++) {
             Bomb bomb = Bomb.createRandomBomb(maxScreenCol, maxScreenRow, tileSize, color);
@@ -71,12 +96,18 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    //to set ControlPanel inside GamePanel
+    /**
+     * Sets the ControlPanel inside GamePanel.
+     *
+     * @param controlPanel the control panel
+     */
     public void setControlPanel(ControlPanel controlPanel) {
         this.controlPanel = controlPanel;
     }
 
-    //Starting game
+    /**
+     * Starts the game thread.
+     */
     public void startGameThread() {
         if (gameThread == null) {
             gameThread = new Thread(this);
@@ -84,19 +115,27 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    //Stopping game
+    /**
+     * Stops the game thread.
+     */
     public void stopGameThread() {
         if (gameThread != null) {
             gameThread.interrupt();
             gameThread = null;
         }
     }
-
+    /**
+     * Checks if the game is running.
+     *
+     * @return true if the game is running, false otherwise
+     */
     public boolean isRunning() {
         return gameThread != null && gameThread.isAlive();
     }
 
-    //restarting simulation with the same settings
+    /**
+     * Restarts the simulation with the same settings.
+     */
     public void restartSimulation() {
         // Reset counters
         destroyedCounter = 0;
@@ -120,26 +159,38 @@ public class GamePanel extends JPanel implements Runnable {
         updateControlPanel();
     }
 
-    //Increment for all counters
+    /**
+     * Increments the repaired counter and updates the ControlPanel.
+     */
     public void incrementRepairedCounter() {
         repairedCounter++;
         updateControlPanel();
     }
+    /**
+     * Increments the destroyed counter and updates the ControlPanel.
+     */
     public void incrementDestroyedCounter() {
         destroyedCounter++;
         updateControlPanel();
     }
+    /**
+     * Increments the count and updates the ControlPanel.
+     */
     public void incrementCounter() {
         count++;
         updateControlPanel();
     }
 
-    //updating ControlPanel with new values for counters
+    /**
+     * Updates the ControlPanel with new values for counters.
+     */
     private void updateControlPanel() {
         controlPanel.updateCounters(destroyedCounter, repairedCounter, count);
     }
 
-    //method keep program running with correct numbers of frames per second on screen
+    /**
+     * Keeps the program running with the correct number of frames per second.
+     */
     @Override
     public void run() {
         double drawInterval = (double) 1000000000 / FPS;
@@ -158,7 +209,9 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    //method with all encounters
+    /**
+     * Updates the game state with all encounters.
+     */
     public void update() {
         //encounters for creature
         for (Creature creature : creatures) {
@@ -182,7 +235,11 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    //method for correct painting
+    /**
+     * Paints the game components on the screen.
+     *
+     * @param g the Graphics object
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

@@ -4,14 +4,22 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
+/**
+ * The ControlPanel class represents the control interface for the simulation,
+ * providing buttons to start/stop and restart the simulation, as well as labels
+ * to display counters.
+ */
 public class ControlPanel extends JFrame {
     //Labels for all counters
     private final JLabel destroyedCounterLabel;
     private final JLabel repairedCounterLabel;
     private final JLabel countLabel;
 
-    //constructor for ControlPanel
+    /**
+     * Constructor for the ControlPanel.
+     *
+     * @param gamePanel the GamePanel instance to control the simulation
+     */
     public ControlPanel(GamePanel gamePanel) {
 
         setTitle("Control Panel"); //setting name
@@ -49,7 +57,13 @@ public class ControlPanel extends JFrame {
         setVisible(true);
     }
 
-    //updating all labels with new information
+    /**
+     * Updates the counter labels with new information.
+     *
+     * @param destroyed the number of destroyed entities
+     * @param repaired the number of repaired entities
+     * @param count the current count
+     */
     public void updateCounters(int destroyed, int repaired, int count) {
         destroyedCounterLabel.setText("Destroyed: " + destroyed);
         repairedCounterLabel.setText("Repaired: " + repaired);

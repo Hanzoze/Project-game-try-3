@@ -6,14 +6,31 @@ import java.awt.*;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Represents a bomb in the game.
+ */
 public class Bomb extends Structure {
 
-    //constructor for Bomb
+    /**
+     * Creates a new Bomb instance with the specified parameters.
+     *
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @param color  the color of the bomb
+     */
     public Bomb(int x, int y, int size, Color color) {
         super(x, y, size, color);
     }
 
-    // Method to handle collision
+    /**
+     * Handles encounters between the bomb and other entities.
+     *
+     * @param creatures   the list of creatures
+     * @param structures  the list of structures
+     * @param groundArray the array of ground tiles
+     * @param tileSize    the size of the tiles
+     * @param gamePanel   the game panel
+     */
     public void handleEncounter(List<Creature> creatures, List<Structure> structures, Ground[][] groundArray, int tileSize, GamePanel gamePanel) {
         for (Creature creature : creatures) { //collision check for creature
             if (this.isCollidingWith(creature)) {
@@ -29,7 +46,15 @@ public class Bomb extends Structure {
         }
     }
 
-    // Method for explosion
+    /**
+     * Causes the bomb to explode, destroying surrounding ground tiles, creatures, and structures.
+     *
+     * @param groundArray the array of ground tiles
+     * @param tileSize the size of the tiles
+     * @param creatures the list of creatures
+     * @param structures the list of structures
+     * @param gamePanel the game panel
+     */
     public void explode(Ground[][] groundArray, int tileSize, List<Creature> creatures, List<Structure> structures, GamePanel gamePanel) {
         this.setDead();
         int col = x / tileSize;//searching for coordinates within 2D array ground
@@ -63,7 +88,14 @@ public class Bomb extends Structure {
         }
     }
 
-    // Collision check for explosion
+    /**
+     * Checks if an entity is within the explosion radius of the bomb.
+     *
+     * @param entityX the x-coordinate of the entity
+     * @param entityY the y-coordinate of the entity
+     * @param tileSize the size of the tiles
+     * @return true if the entity is within the explosion radius, false otherwise
+     */
     private boolean isWithinExplosionRadius(int entityX, int entityY, int tileSize) {
         int col = x / tileSize;
         int row = y / tileSize;
@@ -73,7 +105,15 @@ public class Bomb extends Structure {
         return Math.abs(col - entityCol) <= 1 && Math.abs(row - entityRow) <= 1;
     }
 
-    //method for creating new Bomb in a random place
+    /**
+     * Creates a random bomb within the specified constraints.
+     *
+     * @param maxScreenCol the maximum screen columns
+     * @param maxScreenRow the maximum screen rows
+     * @param tileSize     the size of the tiles
+     * @param color        the color of the bomb
+     * @return a new Bomb instance
+     */
     public static Bomb createRandomBomb(int maxScreenCol, int maxScreenRow, int tileSize, Color color) {
         Random random = new Random();
         int randomX = random.nextInt(maxScreenCol) * tileSize;

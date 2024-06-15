@@ -1,8 +1,16 @@
 package Main;
 
 import javax.swing.*;
+/**
+ * Main class to initialize the game window and start the simulation.
+ */
 
 public class Main {
+    /**
+     * Main method to set up and start the game.
+     *
+     * @param args command line arguments
+     */
     public static void main(String[] args) {
         JFrame window = new JFrame();
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //for closing in right way

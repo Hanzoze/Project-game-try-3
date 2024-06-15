@@ -5,7 +5,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
-
+/**
+ * Represents a general entity in the game.
+ */
 public abstract class Entity {
     public int x, y; // coordinates
     public int size; // size
@@ -13,7 +15,14 @@ public abstract class Entity {
     public Color color; //color
     public BufferedImage builder_image, warrior_red_image, warrior_blue_image, bomb_image; //images
 
-    //constructor for all other classes that were created from Entity
+    /**
+     * Constructor for all other classes that are created from Entity.
+     *
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @param size the size of the entity
+     * @param color the color of the entity
+     */
     public Entity(int x, int y, int size, Color color){
         this.x=x;
         this.y=y;
@@ -23,41 +32,78 @@ public abstract class Entity {
         getImage();
     }
 
-    //set status dead or alive
+    /**
+     * Sets the status of the entity to dead.
+     */
     public void setDead() {
         isAlive = false;
     }
+
+    /**
+     * Sets the status of the entity to alive.
+     */
     public void setAlive(){
         isAlive = true;
     }
 
-    //check if alive
+    /**
+     * Checks if the entity is alive.
+     *
+     * @return true if the entity is alive, false otherwise
+     */
     public boolean isAlive() {
         return isAlive;
     }
 
-    // get new coordinates
+    /**
+     * Gets the x-coordinate of the entity.
+     *
+     * @return the x-coordinate
+     */
     public int getX() {
         return x;
     }
+
+    /**
+     * Gets the y-coordinate of the entity.
+     *
+     * @return the y-coordinate
+     */
     public int getY() {
         return y;
     }
 
-    // Set new coordinates
+    /**
+     * Sets the x-coordinate of the entity.
+     *
+     * @param x the new x-coordinate
+     */
     public void setX(int x) {
         this.x = x;
     }
+
+    /**
+     * Sets the y-coordinate of the entity.
+     *
+     * @param y the new y-coordinate
+     */
     public void setY(int y) {
         this.y = y;
     }
 
-    //checking if on the same tile
+    /**
+     * Checks if this entity is colliding with another entity.
+     *
+     * @param other the other entity
+     * @return true if the entities are colliding, false otherwise
+     */
     public boolean isCollidingWith(Entity other) {
         return this != other && this.getX() == other.getX() && this.getY() == other.getY();
     }
 
-    //writing path to every image
+    /**
+     * Loads images for different types of entities.
+     */
     public void getImage(){
         try{
             builder_image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Main/images/builder.png")));
@@ -69,7 +115,11 @@ public abstract class Entity {
         }
     }
 
-    //drawing correct image for every agent
+    /**
+     * Draws the correct image for each entity.
+     *
+     * @param g the graphics context
+     */
     public void draw(Graphics2D g) {
         if (isAlive) {
             if (this instanceof Warrior) {
