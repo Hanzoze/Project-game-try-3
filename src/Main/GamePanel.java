@@ -9,8 +9,8 @@ import java.util.List;
 
 public class GamePanel extends JPanel implements Runnable {
     // Screen settings
-    final int originalTileSize = 16; // 16x16
-    final int scale = 3;
+    final int originalTileSize = 16; // 16x16 pixels
+    final int scale = 3; //for proper scaling GamePanel on the screen
 
     final int tileSize = originalTileSize * scale; // 48x48
     final int maxScreenCol = 16;
@@ -18,17 +18,17 @@ public class GamePanel extends JPanel implements Runnable {
     final int screenWidth = tileSize * maxScreenCol; // 768 pixels
     final int screenHeight = tileSize * maxScreenRow; // 576 pixels
 
-    int destroyedCounter = 0; // Counter for destroyed tiles
-    int repairedCounter = 0;
-    int count = 0;
+    int destroyedCounter = 0; // Counter for destroyed ground
+    int repairedCounter = 0; //Counter for repaired ground
+    int count = 0; //Counter for Builders killed by Warriors encounter
 
     private final SimulationSettings settings;
 
-    final int FPS = 30;
-    Thread gameThread;
-    Ground[][] groundArray;
-    List<Creature> creatures; // List to store all creatures
-    List<Structure> structures; // List to store all structures
+    final int FPS = 30; //frames per second and also speed for simulation
+    Thread gameThread; //gameThread for keeping the program runnable before user want to stop it
+    Ground[][] groundArray; //2D array to store all ground
+    List<Creature> creatures; //List to store all creatures
+    List<Structure> structures; //List to store all structures
     ControlPanel controlPanel;
 
     // Constructor for GamePanel
@@ -43,6 +43,7 @@ public class GamePanel extends JPanel implements Runnable {
         creatures = new ArrayList<>();
         structures = new ArrayList<>();
 
+        //creating all Entity with settings provided from SimulationSettings
         createWarriors(settings.getNumberOfWarriorsRed(), Color.RED);
         createWarriors(settings.getNumberOfWarriorsBlue(), Color.BLUE);
         createBuilders(settings.getNumberOfBuilders(), Color.YELLOW);
@@ -70,10 +71,12 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    //to set ControlPanel inside GamePanel
     public void setControlPanel(ControlPanel controlPanel) {
         this.controlPanel = controlPanel;
     }
 
+    //Starting game
     public void startGameThread() {
         if (gameThread == null) {
             gameThread = new Thread(this);
@@ -81,6 +84,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    //Stopping game
     public void stopGameThread() {
         if (gameThread != null) {
             gameThread.interrupt();
@@ -92,6 +96,7 @@ public class GamePanel extends JPanel implements Runnable {
         return gameThread != null && gameThread.isAlive();
     }
 
+    //restarting simulation with the same settings
     public void restartSimulation() {
         // Reset counters
         destroyedCounter = 0;
@@ -111,11 +116,11 @@ public class GamePanel extends JPanel implements Runnable {
         // Restore all ground tiles
         groundArray = Ground.creatnewground(maxScreenCol, maxScreenRow, tileSize, Color.GRAY);
 
-        //Udpate ControlPanel
+        //Update ControlPanel
         updateControlPanel();
     }
 
-
+    //Increment for all counters
     public void incrementRepairedCounter() {
         repairedCounter++;
         updateControlPanel();
@@ -129,13 +134,15 @@ public class GamePanel extends JPanel implements Runnable {
         updateControlPanel();
     }
 
+    //updating ControlPanel with new values for counters
     private void updateControlPanel() {
         controlPanel.updateCounters(destroyedCounter, repairedCounter, count);
     }
 
+    //method keep program running with correct numbers of frames per second on screen
     @Override
     public void run() {
-        double drawInterval = (double) 1000000000 / FPS; // 0.033333 seconds
+        double drawInterval = (double) 1000000000 / FPS;
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
@@ -146,14 +153,16 @@ public class GamePanel extends JPanel implements Runnable {
             if (delta >= 1) {
                 update();
                 repaint();
-                delta--; //and in the end we are subtracting 1 from delta so it will be the same from the start
+                delta--; //and in the end we are subtracting 1 from delta, so it will be the same from the start
             }
         }
     }
 
+    //method with all encounters
     public void update() {
+        //encounters for creature
         for (Creature creature : creatures) {
-            if (creature.isAlive()) {
+            if (creature.isAlive()) { //only for alive creature
                 Creature.move(creature, tileSize, screenWidth, screenHeight);
                 if (creature instanceof Warrior) {
                     ((Warrior) creature).handleEncounter(creatures, groundArray, tileSize, this);
@@ -163,8 +172,9 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
 
+        //encounters for structure
         for (Structure structure : structures) {
-            if (structure.isAlive()) {
+            if (structure.isAlive()) { //only for alive structure
                 if (structure instanceof Bomb) {
                     ((Bomb) structure).handleEncounter(creatures, structures, groundArray, tileSize, this);
                 }
@@ -172,6 +182,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    //method for correct painting
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

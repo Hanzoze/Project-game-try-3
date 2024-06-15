@@ -7,13 +7,13 @@ import java.io.IOException;
 import java.util.Objects;
 
 public abstract class Entity {
-    public int x, y; // координаты
-    public int size; // размер
-    public boolean isAlive; // жив или мертв
-    public Color color;
-    public BufferedImage builder_image, warrior_red_image, warrior_blue_image, bomb_image;
+    public int x, y; // coordinates
+    public int size; // size
+    public boolean isAlive; // dead or alive
+    public Color color; //color
+    public BufferedImage builder_image, warrior_red_image, warrior_blue_image, bomb_image; //images
 
-
+    //constructor for all other classes that were created from Entity
     public Entity(int x, int y, int size, Color color){
         this.x=x;
         this.y=y;
@@ -23,18 +23,23 @@ public abstract class Entity {
         getImage();
     }
 
+    //set status dead or alive
     public void setDead() {
         isAlive = false;
     }
+    public void setAlive(){
+        isAlive = true;
+    }
 
+    //check if alive
     public boolean isAlive() {
         return isAlive;
     }
 
+    // get new coordinates
     public int getX() {
         return x;
     }
-
     public int getY() {
         return y;
     }
@@ -43,19 +48,16 @@ public abstract class Entity {
     public void setX(int x) {
         this.x = x;
     }
-
     public void setY(int y) {
         this.y = y;
     }
 
-    public void setAlive(){
-        isAlive = true;
-    }
-
+    //checking if on the same tile
     public boolean isCollidingWith(Entity other) {
         return this != other && this.getX() == other.getX() && this.getY() == other.getY();
     }
 
+    //writing path to every image
     public void getImage(){
         try{
             builder_image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/Main/images/builder.png")));
@@ -66,6 +68,8 @@ public abstract class Entity {
             e.printStackTrace();
         }
     }
+
+    //drawing correct image for every agent
     public void draw(Graphics2D g) {
         if (isAlive) {
             if (this instanceof Warrior) {

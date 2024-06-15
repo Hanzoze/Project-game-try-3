@@ -9,13 +9,13 @@ public class Main {
         window.setResizable(false);
         window.setTitle("Super-mega-nieciekawa-gra"); //name
 
-        // Создайте GamePanel без ControlPanel
-        GamePanel gamePanel = new GamePanel(new SimulationSettings(0, 0, 10, 10));
+        // Create GamePanel without ControlPanel
+        GamePanel gamePanel = new GamePanel(new SimulationSettings(17, 13, 10, 10));
 
-        // Затем создайте ControlPanel с ссылкой на GamePanel
+        // Create ControlPanel with reference to GamePanel
         ControlPanel controlPanel = new ControlPanel(gamePanel);
 
-        // Установите ControlPanel в GamePanel
+        // Set ControlPanel inside GamePanel
         gamePanel.setControlPanel(controlPanel);
 
         window.add(gamePanel); //adding gamePanel
